@@ -54,18 +54,20 @@ public class Graph {
         vertices.add(vertex);
     }
 
-    //create path from each vertex to each other vertex
     //edge weight = distance between Euclidian 2D coordinates
     protected void loadEdges(){
+        //create path from each vertex...
         for(int i = 0; i < vertices.size(); ++i){
+            Vertex vertex1 = vertices.get(i);
+
+            //...to each other vertex
             for(int j = 0; j < vertices.size(); ++j){
-                Vertex from = vertices.get(i);
-                Vertex to = vertices.get(j);
-                long weight = calcDist(from.xcoord, from.ycoord, to.xcoord, to.ycoord);
+                Vertex vertex2 = vertices.get(j);
+                long edgeWeight = calcDistance(vertex1.xcoord, vertex1.ycoord, vertex2.xcoord, vertex2.ycoord);
 
                 if(vertices.get(i) != vertices.get(j)){
-                    Edge e = new Edge(to, weight);
-                    from.edges.add(e);
+                    Edge e = new Edge(vertex2, edgeWeight);
+                    vertex1.edges.add(e);
                 }
             }
         }
@@ -81,7 +83,7 @@ public class Graph {
     }
 
     //calculate distance between Euclidean 2D coordinates (i.e. edge weight)
-    protected long calcDist(float x1, float y1, float x2, float y2){
+    protected long calcDistance(float x1, float y1, float x2, float y2){
         double xTotal = Math.pow((x2 - x1), 2);
         double yTotal = Math.pow((y2 - y1), 2);
         double subTotal = xTotal + yTotal;
@@ -94,6 +96,7 @@ public class Graph {
         return vertices;
     }
 
+    //for debugging purposes
     protected void printAdjacencyList(){
         for(Vertex v:vertices){
             v.print();
