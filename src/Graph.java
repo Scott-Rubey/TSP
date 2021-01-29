@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Graph {
-    protected static Scanner readFile;
+    protected static Scanner fileReader;
     protected List<Vertex> vertices;
 
     protected Graph(){
@@ -14,15 +14,15 @@ public class Graph {
         return vertices;
     }
 
-    protected void loadGraph(){
-        loadVerts();
-        createEdges();
+    protected void loadGraph(String dataset){
+        loadVertices(dataset);
+        loadEdges();
     }
 
-    protected void loadVerts(){
+    protected void loadVertices(String dataset){
         try
         {
-            readFile = new Scanner(new File("Data/Berlin52.txt"));
+            fileReader = new Scanner(new File("Data/" + dataset));
         }
 
         catch(FileNotFoundException ex)
@@ -31,25 +31,25 @@ public class Graph {
         }
 
         //load the first vertex and edge
-        if(readFile.hasNext()) {
-            Vertex v1 = new Vertex(readFile.next(), readFile.nextFloat(), readFile.nextFloat());
+        if(fileReader.hasNext()) {
+            Vertex v1 = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
             vertices.add(v1);
-            readFile.nextLine();
+            fileReader.nextLine();
         }
 
         //load subsequent vertices and edges
-        while(readFile.hasNext()) {
-            Vertex v1 = new Vertex(readFile.next(), readFile.nextFloat(), readFile.nextFloat());
+        while(fileReader.hasNext()) {
+            Vertex v1 = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
             vertices.add(v1);
-            readFile.nextLine();
+            fileReader.nextLine();
         }
 
-        readFile.close();
+        fileReader.close();
     }
 
     //create path from each vertex to each other vertex
     //edge weight = distance between Euclidian 2D coordinates
-    protected void createEdges(){
+    protected void loadEdges(){
         for(int i = 0; i < vertices.size(); ++i){
             for(int j = 0; j < vertices.size(); ++j){
                 Vertex from = vertices.get(i);

@@ -3,9 +3,11 @@ public class Main {
         Graph graph = new Graph();
         NearNbr tsp1 = new NearNbr();
         TwoOptSwap tsp2 = new TwoOptSwap();
+        String dataset = args[0];
 
         //create graph
-        graph.loadGraph();
+        graph.loadGraph(dataset);
+        System.out.print("Dataset: " + dataset + "\n");
 
         //create route using Nearest Neighbor
         Route r1 = tsp1.nrstNbrDriver(graph.getVertices());
@@ -21,4 +23,6 @@ public class Main {
 
         //Random Swap can be enabled in TwoOptSwap.java
     }
+
+    //TODO: add error handling for bad filename
 }
