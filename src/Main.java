@@ -1,12 +1,10 @@
 public class Main {
     public static void main(String[] args) {
-        Graph graph = new Graph();
+        String dataset = args[0];
+        Graph graph = new Graph(dataset);
         NearNbr tsp1 = new NearNbr();
         TwoOptSwap tsp2 = new TwoOptSwap();
-        String dataset = args[0];
 
-        //create graph
-        graph.loadGraph(dataset);
         System.out.print("Dataset: " + dataset + "\n");
 
         //create route using Nearest Neighbor

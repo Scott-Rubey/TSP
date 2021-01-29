@@ -4,47 +4,42 @@ import java.util.*;
 
 public class Graph {
     protected static Scanner fileReader;
+    protected String dataset;
     protected List<Vertex> vertices;
 
-    protected Graph(){
-        this.vertices = new ArrayList<Vertex>();
+    protected Graph(String dataset){
+        this.vertices = new ArrayList<>();
+        this.dataset = dataset;
+        loadDataset();
     }
 
-    protected List<Vertex> getVertices(){
-        return vertices;
-    }
-
-    protected void loadGraph(String dataset){
-        loadVertices(dataset);
+    protected void loadDataset(){
+        loadVertices();
         loadEdges();
     }
 
-    protected void loadVertices(String dataset){
-        try
-        {
-            fileReader = new Scanner(new File("Data/" + dataset));
-        }
-
-        catch(FileNotFoundException ex)
-        {
-            System.out.print("***Could not connect to external data file***\n");
-        }
-
-        //load the first vertex and edge
-        if(fileReader.hasNext()) {
-            Vertex v1 = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
-            vertices.add(v1);
-            fileReader.nextLine();
-        }
-
-        //load subsequent vertices and edges
-        while(fileReader.hasNext()) {
-            Vertex v1 = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
-            vertices.add(v1);
-            fileReader.nextLine();
-        }
+    protected void loadVertices(){
+        connectToFile();
+        loadFirstVertex();
+        loadRemainingVertices();
 
         fileReader.close();
+    }
+
+    protected void loadFirstVertex() {
+        if(fileReader.hasNext())
+            getVertexFromFile();
+    }
+
+    private void loadRemainingVertices() {
+        while(fileReader.hasNext())
+            getVertexFromFile();
+    }
+
+    protected void getVertexFromFile() {
+        Vertex vertex = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
+        vertices.add(vertex);
+        fileReader.nextLine();
     }
 
     //create path from each vertex to each other vertex
@@ -64,6 +59,15 @@ public class Graph {
         }
     }
 
+    protected void connectToFile() {
+        try {
+            fileReader = new Scanner(new File("Data/" + dataset));
+        }
+        catch(FileNotFoundException ex) {
+            System.out.print("***Could not connect to external data file***\n");
+        }
+    }
+
     //calculate distance between Euclidean 2D coordinates (i.e. edge weight)
     protected long calcDist(float x1, float y1, float x2, float y2){
         double xTotal = Math.pow((x2 - x1), 2);
@@ -74,8 +78,11 @@ public class Graph {
         return Math.round(result);
     }
 
-    //print the adjacency list
-    protected void printAdjList(){
+    protected List<Vertex> getVertices(){
+        return vertices;
+    }
+
+    protected void printAdjacencyList(){
         for(Vertex v:vertices){
             v.print();
         }
