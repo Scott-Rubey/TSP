@@ -5,9 +5,7 @@ public class Main {
         TwoOptSwap tsp2 = new TwoOptSwap();
 
         //create graph
-        graph.loadVerts();  //load vertices from external data file
-        graph.createEdges();  //create edges from those vertices
-//        graph.printAdjList();  //newly created adjacency list -- for debugging
+        graph.loadGraph();
 
         //create route using Nearest Neighbor
         Route r1 = tsp1.nrstNbrDriver(graph.getVertices());

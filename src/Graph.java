@@ -14,6 +14,11 @@ public class Graph {
         return vertices;
     }
 
+    protected void loadGraph(){
+        loadVerts();
+        createEdges();
+    }
+
     protected void loadVerts(){
         try
         {
