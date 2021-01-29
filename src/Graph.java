@@ -27,19 +27,31 @@ public class Graph {
     }
 
     protected void loadFirstVertex() {
-        if(fileReader.hasNext())
-            getVertexFromFile();
+        if(fileReader.hasNext()) {
+            Vertex vertex = getVertexFromFile();
+            addVertexToList(vertex);
+            fileReader.nextLine();
+        }
     }
 
     private void loadRemainingVertices() {
-        while(fileReader.hasNext())
-            getVertexFromFile();
+        while(fileReader.hasNext()) {
+            Vertex vertex = getVertexFromFile();
+            addVertexToList(vertex);
+            fileReader.nextLine();
+        }
     }
 
-    protected void getVertexFromFile() {
-        Vertex vertex = new Vertex(fileReader.next(), fileReader.nextFloat(), fileReader.nextFloat());
+    protected Vertex getVertexFromFile() {
+        String vertexNumber = fileReader.next();
+        float xCoordinate = fileReader.nextFloat();
+        float ycoordinate = fileReader.nextFloat();
+
+        return new Vertex(vertexNumber, xCoordinate, ycoordinate);
+    }
+
+    protected void addVertexToList(Vertex vertex){
         vertices.add(vertex);
-        fileReader.nextLine();
     }
 
     //create path from each vertex to each other vertex
