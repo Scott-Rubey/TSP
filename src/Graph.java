@@ -79,6 +79,7 @@ public class Graph {
 
     //edge weight = distance between Euclidean 2D coordinates
     protected long getDistanceBetween(Vertex vertex1, Vertex vertex2){
+        //TODO: create Point class to encapsulate x/y coordinates
         float x1 = vertex1.xcoord;
         float y1 = vertex1.ycoord;
         float x2 = vertex2.xcoord;
@@ -113,12 +114,5 @@ public class Graph {
 
     protected List<Vertex> getVertices(){
         return vertices;
-    }
-
-    //for debugging purposes
-    protected void printAdjacencyList(){
-        for(Vertex v:vertices){
-            v.print();
-        }
     }
 }

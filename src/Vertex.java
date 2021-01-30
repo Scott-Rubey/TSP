@@ -14,13 +14,4 @@ public class Vertex {
         this.visited = false;
         this.edges = new ArrayList();
     }
-
-    protected void print(){
-        System.out.print(name + " " + xcoord + " " + ycoord + ": [");
-
-        for(Edge e:edges)
-            e.print();
-
-        System.out.print("]\n");
-    }
 }
