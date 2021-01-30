@@ -6,8 +6,4 @@ public class Edge {
         this.to = copyTo;
         this.weight = copyWeight;
     }
-
-    protected void print(){
-        System.out.print("(" + to.name + ", " + weight + ")");
-    }
 }
