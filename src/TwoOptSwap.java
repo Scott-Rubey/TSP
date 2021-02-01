@@ -2,8 +2,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoOptSwap {
+    //TODO: refactor
     protected Route twoOptSwp(Route oldRoute){
-        long bestDist = oldRoute.calcDist();
+        long bestDist = oldRoute.calcRouteWeight();
         long newDist = 0;
         Route newRoute;
         Route curRoute = oldRoute;
@@ -81,11 +82,11 @@ public class TwoOptSwap {
     protected Route twoOptSwpDriver(Route oldRoute){
         int times = 10;
         Route bestRoute = oldRoute;
-        long bestDist = oldRoute.calcDist();
+        long bestDist = oldRoute.calcRouteWeight();
 
         for(int i = 0; i < times; ++i){
             Route curRoute = twoOptSwp(bestRoute);
-            long curDist = curRoute.calcDist();
+            long curDist = curRoute.calcRouteWeight();
             if(curDist < bestDist){
                 bestDist = curDist;
                 bestRoute = curRoute;
@@ -95,6 +96,6 @@ public class TwoOptSwap {
     }
 
     protected long calcTotal(Route route){
-        return route.calcDist();
+        return route.calcRouteWeight();
     }
 }

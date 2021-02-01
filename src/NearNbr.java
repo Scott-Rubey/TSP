@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class NearNbr {
+    //TODO: refactor
 
     //find best possible route by starting from each vertex
     protected Route nrstNbrDriver(List<Vertex> vertices){
@@ -10,7 +11,7 @@ public class NearNbr {
         for(int i = 0; i < vertices.size(); ++i){
             Vertex v = vertices.get(i);
             Route curRoute = nrstNbr(vertices, v);
-            long curDist = curRoute.calcDist();
+            long curDist = curRoute.calcRouteWeight();
             if(curDist < bestDist){
                 bestDist = curDist;
                 bestRoute = curRoute;
