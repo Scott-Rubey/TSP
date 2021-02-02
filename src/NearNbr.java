@@ -10,14 +10,15 @@ public class NearNbr {
 
     //wrapper for nearest neighbor algorithm
     //get lowest route weight by running the algorithm from each vertex
-    protected Route nrstNbrDriver(){
+    protected Route runNearestNeighbor(){
         Route bestRoute = null;
         double bestWeight = Double.POSITIVE_INFINITY;
 
         for(int i = 0; i < vertices.size(); ++i){
             Vertex currentVertex = vertices.get(i);
-            Route currentRoute = nrstNbr(currentVertex);
+            Route currentRoute = getRoute(currentVertex);
             double currentWeight = currentRoute.calcRouteWeight();
+
             if(currentWeight < bestWeight){
                 bestWeight = currentWeight;
                 bestRoute = currentRoute;
@@ -27,47 +28,53 @@ public class NearNbr {
     }
 
     //find a route by greedily searching for edges of lowest weight
-    protected Route nrstNbr(Vertex startingVertex){
+    //uses nearest neighbor algorithm
+    protected Route getRoute(Vertex startingVertex){
         Route route = new Route();
         Vertex currentVertex = startingVertex;
-        Vertex toVisit;  //destination vertex
-        Edge shortestEdge;
-        double weight;  //weight to compare
-        int count = 1;
 
-        setAllVerticesToUnvisited();
-        setCurrentVertexToVisited(currentVertex);
-        addVertexToRoute(currentVertex, route);
+        //set all vertices to unvisited, set starting vertex to visited and add it to the route
+        initializeRoute(route, startingVertex);
 
-        while(count < vertices.size()){
-            weight = Double.POSITIVE_INFINITY;
-            toVisit = null;
-            shortestEdge = null;
-
-            for(Edge e:currentVertex.edges) {
-                //search unvisited edges for lowest weight
-                boolean unvisited = e.destination.visited == false;
-                if (unvisited && e.weight < weight) {
-                    toVisit = e.destination;
-                    weight = e.weight;
-                    shortestEdge = e;
-                }
-            }
-            currentVertex = toVisit;
-            currentVertex.visited = true;
-            addVertexToRoute(currentVertex, route);
-            route.edges.add(shortestEdge);
-
-            ++count;
-        }
+        //generate route by iterating through all vertices, each time returning the next vertex on the route
+        for(int i = 1; i < vertices.size(); ++i)
+            currentVertex = getNextVertex(route, currentVertex);
 
         //return to the start and add the appropriate weight
-        addVertexToRoute(startingVertex, route);
-        for(Edge e:currentVertex.edges){
-            if(e.destination == startingVertex)
-                route.edges.add(e);
-        }
+        completeCycle(startingVertex, route, currentVertex);
+
         return route;
+    }
+
+    private Vertex getNextVertex(Route route, Vertex currentVertex) {
+        double lowestWeight;
+        Vertex candidateVertex;  //destination vertex being considered
+        Edge shortestEdge;
+        lowestWeight = Double.POSITIVE_INFINITY;
+        candidateVertex = null;
+        shortestEdge = null;
+
+        //search edges for lowest weight
+        for(Edge edge:currentVertex.edges) {
+            boolean unvisited = !edge.destinationVertex.visited;
+            if (unvisited && edge.weight < lowestWeight) {
+                candidateVertex = edge.destinationVertex;
+                lowestWeight = edge.weight;
+                shortestEdge = edge;
+            }
+        }
+        currentVertex = candidateVertex;
+        setVertexToVisited(currentVertex);
+        addVertexToRoute(currentVertex, route);
+        route.edges.add(shortestEdge);
+
+        return currentVertex;
+    }
+
+    private void initializeRoute(Route route, Vertex startVertex) {
+        setAllVerticesToUnvisited();
+        setVertexToVisited(startVertex);
+        addVertexToRoute(startVertex, route);
     }
 
     private void setAllVerticesToUnvisited() {
@@ -75,11 +82,19 @@ public class NearNbr {
             vertices.get(i).visited = false;
     }
 
-    private void setCurrentVertexToVisited(Vertex currentVertex) {
+    private void setVertexToVisited(Vertex currentVertex) {
         currentVertex.visited = true;
     }
 
     private void addVertexToRoute(Vertex currentVertex, Route route) {
         route.vertices.add(currentVertex);
+    }
+
+    private void completeCycle(Vertex startingVertex, Route route, Vertex currentVertex) {
+        addVertexToRoute(startingVertex, route);
+        for(Edge e:currentVertex.edges){
+            if(e.destinationVertex == startingVertex)
+                route.edges.add(e);
+        }
     }
 }

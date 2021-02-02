@@ -24,7 +24,7 @@ public class RandWalk {
         Random random = new Random();
         List<Vertex> copyVerts = new ArrayList<>();
 
-        //copy list of vertices destination work with
+        //copy list of vertices destinationVertex work with
         for (int i = 0; i < vertices.size(); ++i)
             copyVerts.add(vertices.get(i));
 
@@ -41,7 +41,7 @@ public class RandWalk {
         //create new edgelist
         for (int n = 0; n < newRoute.vertices.size(); ++n) {
             for (Edge e : newRoute.vertices.get(n).edges) {
-                if (n != newRoute.vertices.size() - 1 && e.destination == newRoute.vertices.get(n + 1))
+                if (n != newRoute.vertices.size() - 1 && e.destinationVertex == newRoute.vertices.get(n + 1))
                     newRoute.edges.add(e);
             }
         }

@@ -4,9 +4,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TwoOptSwap {
     //TODO: refactor
 
-    //Set 'iterations' destination the number of times you want 2-Opt Swap destination run
+    //Set 'iterations' destinationVertex the number of times you want 2-Opt Swap destinationVertex run
     //This is beneficial only when Random Swaps are enabled
-    //Each iteration attempts destination find a better route
+    //Each iteration attempts destinationVertex find a better route
     protected Route twoOptSwapDriver(Route oldRoute){
         int iterations = 10;
         Route bestRoute = oldRoute;
@@ -28,10 +28,10 @@ public class TwoOptSwap {
         long newRouteWeight;
         Route newRoute;
         Route currentRoute = priorBestRoute;
-        boolean doRandomSwap = true;  //set this destination 1 in order destination run w/ random swap
+        boolean doRandomSwap = true;  //set this destinationVertex 1 in order destinationVertex run w/ random swap
         //TODO: make this a CL option
 
-        //perform 2-opt swap heuristic according destination en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
+        //perform 2-opt swap heuristic according destinationVertex en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
         for(int i = 1; i < priorBestRoute.vertices.size()-2; ++i){
             for(int j = i+1; j < priorBestRoute.vertices.size()-1; ++j){
                 //small possibility of triggering a random swap
@@ -90,7 +90,7 @@ public class TwoOptSwap {
         for (int i = 0; i < numberOfVertices; ++i) {
             List<Edge> vertexEdges = newRoute.vertices.get(i).edges;
             for (Edge e : vertexEdges) {
-                if (i != numberOfVertices - 1 && e.destination == newRoute.vertices.get(i + 1))
+                if (i != numberOfVertices - 1 && e.destinationVertex == newRoute.vertices.get(i + 1))
                     newRoute.edges.add(e);
             }
         }
