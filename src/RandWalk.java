@@ -3,7 +3,6 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class RandWalk {
-    //TODO: refactor
     protected Route randWalkWrapper(List<Vertex> vertices){
         long bestSum = 999999999;
         Route bestRoute = null;

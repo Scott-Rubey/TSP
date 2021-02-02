@@ -3,41 +3,44 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoOptSwap {
     //TODO: refactor
-    protected Route twoOptSwp(Route oldRoute){
-        long bestDist = oldRoute.calcRouteWeight();
-        long newDist = 0;
+    protected Route twoOptSwp(Route priorBestRoute){
+        long priorBestWeight = priorBestRoute.calcRouteWeight();
+        long newRouteWeight;
         Route newRoute;
-        Route curRoute = oldRoute;
-        Random random = new Random();
-        int initRand = 1;  //set this to 1 in order to run w/ random swap
+        Route currentRoute = priorBestRoute;
+        boolean doRandomSwap = true;  //set this to 1 in order to run w/ random swap
+        //TODO: make this a CL option
 
-        for(int i = 1; i < oldRoute.vertices.size()-2; ++i){
-            for(int j = i+1; j < oldRoute.vertices.size()-1; ++j){
-                //small possibility of a random swap
-                int tune = 10;
-                int randPos = ThreadLocalRandom.current().nextInt(1,  tune+1);
-                if(randPos % tune == 0 && initRand == 1) {
-                    int tempi = ThreadLocalRandom.current().nextInt(1, oldRoute.vertices.size()-2);
-                    int tempj = ThreadLocalRandom.current().nextInt(i+1, oldRoute.vertices.size()-1);
-                    newRoute = twoOptSwpHlp(curRoute, tempi, tempj);
-                    newDist = calcTotal(newRoute);
+        //perform 2-opt swap heuristic according to en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
+        for(int i = 1; i < priorBestRoute.vertices.size()-2; ++i){
+            for(int j = i+1; j < priorBestRoute.vertices.size()-1; ++j){
+                //small possibility of triggering a random swap
+                int tune = 10;  //TODO: make this a CL option
+                int possibility = ThreadLocalRandom.current().nextInt(1,  tune+1);
+
+                boolean swapTriggered = possibility % tune == 0;
+                if(doRandomSwap && swapTriggered) {
+                    int tempi = ThreadLocalRandom.current().nextInt(1, priorBestRoute.vertices.size()-2);
+                    int tempj = ThreadLocalRandom.current().nextInt(i+1, priorBestRoute.vertices.size()-1);
+                    newRoute = twoOptSwpHlp(currentRoute, tempi, tempj);
+                    newRouteWeight = calcTotal(newRoute);
                 }
 
                 //otherwise, continue as normal
                 else {
-                    newRoute = twoOptSwpHlp(curRoute, i, j);
-                    newDist = calcTotal(newRoute);
+                    newRoute = twoOptSwpHlp(currentRoute, i, j);
+                    newRouteWeight = calcTotal(newRoute);
                 }
 
                 //if a new best has been found, keep it
-                if(newDist < bestDist){
-                    bestDist = newDist;
-                    curRoute = newRoute;
+                if(newRouteWeight < priorBestWeight){
+                    priorBestWeight = newRouteWeight;
+                    currentRoute = newRoute;
                 }
             }
         }
 
-        return curRoute;
+        return currentRoute;
     }
 
     //performs the actual swap operation
