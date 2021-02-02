@@ -1,17 +1,37 @@
-import java.util.Random;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoOptSwap {
     //TODO: refactor
-    protected Route twoOptSwp(Route priorBestRoute){
+
+    //Set 'iterations' destination the number of times you want 2-Opt Swap destination run
+    //This is beneficial only when Random Swaps are enabled
+    //Each iteration attempts destination find a better route
+    protected Route twoOptSwapDriver(Route oldRoute){
+        int iterations = 10;
+        Route bestRoute = oldRoute;
+        long bestDist = oldRoute.calcRouteWeight();
+
+        for(int i = 0; i < iterations; ++i){
+            Route curRoute = randomSwap(bestRoute);
+            long curDist = curRoute.calcRouteWeight();
+            if(curDist < bestDist){
+                bestDist = curDist;
+                bestRoute = curRoute;
+            }
+        }
+        return bestRoute;
+    }
+
+    protected Route randomSwap(Route priorBestRoute){
         long priorBestWeight = priorBestRoute.calcRouteWeight();
         long newRouteWeight;
         Route newRoute;
         Route currentRoute = priorBestRoute;
-        boolean doRandomSwap = true;  //set this to 1 in order to run w/ random swap
+        boolean doRandomSwap = true;  //set this destination 1 in order destination run w/ random swap
         //TODO: make this a CL option
 
-        //perform 2-opt swap heuristic according to en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
+        //perform 2-opt swap heuristic according destination en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
         for(int i = 1; i < priorBestRoute.vertices.size()-2; ++i){
             for(int j = i+1; j < priorBestRoute.vertices.size()-1; ++j){
                 //small possibility of triggering a random swap
@@ -22,13 +42,13 @@ public class TwoOptSwap {
                 if(doRandomSwap && swapTriggered) {
                     int tempi = ThreadLocalRandom.current().nextInt(1, priorBestRoute.vertices.size()-2);
                     int tempj = ThreadLocalRandom.current().nextInt(i+1, priorBestRoute.vertices.size()-1);
-                    newRoute = twoOptSwpHlp(currentRoute, tempi, tempj);
+                    newRoute = doSwap(currentRoute, tempi, tempj);
                     newRouteWeight = calcTotal(newRoute);
                 }
 
                 //otherwise, continue as normal
                 else {
-                    newRoute = twoOptSwpHlp(currentRoute, i, j);
+                    newRoute = doSwap(currentRoute, i, j);
                     newRouteWeight = calcTotal(newRoute);
                 }
 
@@ -44,7 +64,7 @@ public class TwoOptSwap {
     }
 
     //performs the actual swap operation
-    protected Route twoOptSwpHlp(Route oldRoute, int i, int j){
+    protected Route doSwap(Route oldRoute, int i, int j){
         Route newRoute = new Route();
         int temp = j;
 
@@ -60,42 +80,20 @@ public class TwoOptSwap {
             newRoute.vertices.add(oldRoute.vertices.get(m));
         }
 
-        //for debugging purposes -- time to create edgelist is trivial (< 1 ms in all cases tested)
-//        long startTest = System.currentTimeMillis();
-
-        //create new edgelist
-        for (int n = 0; n < newRoute.vertices.size(); ++n) {
-            for (Edge e : newRoute.vertices.get(n).edges) {
-                if (n != newRoute.vertices.size() - 1 && e.to == newRoute.vertices.get(n + 1))
-                    newRoute.edges.add(e);
-            }
-        }
-
-        //for debugging
-/*        long endTest = System.currentTimeMillis();
-        float edgeTest = (endTest - startTest)/1000f;
-        String time = String.format("%.8f", edgeTest);
-        System.out.print("\nEdgelist Time: " + time + "\n");  */
+        createNewEdgelist(newRoute);
 
         return newRoute;
     }
 
-    //Set 'times' to the number of times you want 2-Opt Swap to run
-    //This is beneficial only when Random Swaps are enabled
-    protected Route twoOptSwpDriver(Route oldRoute){
-        int times = 10;
-        Route bestRoute = oldRoute;
-        long bestDist = oldRoute.calcRouteWeight();
-
-        for(int i = 0; i < times; ++i){
-            Route curRoute = twoOptSwp(bestRoute);
-            long curDist = curRoute.calcRouteWeight();
-            if(curDist < bestDist){
-                bestDist = curDist;
-                bestRoute = curRoute;
+    private void createNewEdgelist(Route newRoute) {
+        int numberOfVertices = newRoute.vertices.size();
+        for (int i = 0; i < numberOfVertices; ++i) {
+            List<Edge> vertexEdges = newRoute.vertices.get(i).edges;
+            for (Edge e : vertexEdges) {
+                if (i != numberOfVertices - 1 && e.destination == newRoute.vertices.get(i + 1))
+                    newRoute.edges.add(e);
             }
         }
-        return bestRoute;
     }
 
     protected long calcTotal(Route route){

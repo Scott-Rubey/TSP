@@ -14,7 +14,7 @@ public class Main {
         System.out.print("\nTotal Weight: " + r1.calcRouteWeight() + "\n");
 
         //optimize using 2-Opt-Swaps
-        Route r2 = tsp2.twoOptSwpDriver(r1);
+        Route r2 = tsp2.twoOptSwapDriver(r1);
         System.out.print("\nRoute using Two Opt Swap:");
         r2.printRoute();
         System.out.print("\nTotal Weight: " + r2.calcRouteWeight() + "\n");

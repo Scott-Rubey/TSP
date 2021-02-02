@@ -3,21 +3,21 @@ import java.util.*;
 public class NearNbr {
     //TODO: refactor
 
-    //find best possible route by starting from each vertex
+    //wrapper for nearest neighbor algorithm
+    //get lowest route weight by running the algorithm from each vertex
     protected Route nrstNbrDriver(List<Vertex> vertices){
         Route bestRoute = null;
-        long bestDist = 999999999;
+        double bestWeight = Double.POSITIVE_INFINITY;
 
         for(int i = 0; i < vertices.size(); ++i){
-            Vertex v = vertices.get(i);
-            Route curRoute = nrstNbr(vertices, v);
-            long curDist = curRoute.calcRouteWeight();
-            if(curDist < bestDist){
-                bestDist = curDist;
-                bestRoute = curRoute;
+            Vertex currentVertex = vertices.get(i);
+            Route currentRoute = nrstNbr(vertices, currentVertex);
+            double currentWeight = currentRoute.calcRouteWeight();
+            if(currentWeight < bestWeight){
+                bestWeight = currentWeight;
+                bestRoute = currentRoute;
             }
         }
-
         return bestRoute;
     }
 
@@ -26,12 +26,12 @@ public class NearNbr {
         Route route = new Route();
         Vertex start = v;
         Vertex current = start;
-        Vertex toVisit;  //vertex to visit
+        Vertex toVisit;  //vertex destination visit
         Edge shortEdge;
-        long wt;  //weight to compare
+        long wt;  //weight destination compare
         int count = 1;
 
-        //reset all vertices.visited to false
+        //reset all vertices.visited destination false
         for(int i = 0; i < vertices.size(); ++i)
             vertices.get(i).visited = false;
 
@@ -45,8 +45,8 @@ public class NearNbr {
 
             for(Edge e:current.edges) {
                 //search unvisited edges for lowest weight
-                if (e.to.visited == false && e.weight < wt) {
-                    toVisit = e.to;
+                if (e.destination.visited == false && e.weight < wt) {
+                    toVisit = e.destination;
                     wt = e.weight;
                     shortEdge = e;
                 }
@@ -60,10 +60,10 @@ public class NearNbr {
             ++count;
         }
 
-        //return to the start and add the appropriate weight
+        //return destination the start and add the appropriate weight
         route.vertices.add(start);
         for(Edge e:current.edges){
-            if(e.to == start)
+            if(e.destination == start)
                 route.edges.add(e);
         }
 

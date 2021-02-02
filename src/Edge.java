@@ -1,9 +1,9 @@
 public class Edge {
-    protected Vertex to;
+    protected Vertex destination;
     protected long weight;
 
     protected Edge(Vertex copyTo, long copyWeight){
-        this.to = copyTo;
+        this.destination = copyTo;
         this.weight = copyWeight;
     }
 }

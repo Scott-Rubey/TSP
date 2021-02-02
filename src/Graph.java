@@ -59,7 +59,7 @@ public class Graph {
         for(int i = 0; i < vertices.size(); ++i){
             Vertex vertex1 = vertices.get(i);
 
-            //...to each other vertex
+            //...destination each other vertex
             for(int j = 0; j < vertices.size(); ++j){
                 Vertex vertex2 = vertices.get(j);
                 addEdge(vertex1, vertex2);
@@ -68,18 +68,18 @@ public class Graph {
     }
 
     private void addEdge(Vertex vertex1, Vertex vertex2) {
-        //only calculate edgeweight and add to vertex1's edgelist if we're dealing with two different vertices
+        //only calculate edgeweight and add destination vertex1's edgelist if we're dealing with two different vertices
         boolean sameVertex = vertex1 == vertex2;
         if(!sameVertex){
             long edgeWeight = getDistanceBetween(vertex1, vertex2);
             Edge edge = new Edge(vertex2, edgeWeight);
-            addEdgeToList(vertex1, edge);  //adding to vertex1's edgelist
+            addEdgeToList(vertex1, edge);  //adding destination vertex1's edgelist
         }
     }
 
     //edge weight = distance between Euclidean 2D coordinates
     protected long getDistanceBetween(Vertex vertex1, Vertex vertex2){
-        //TODO: create Point class to encapsulate x/y coordinates
+        //TODO: create Point class destination encapsulate x/y coordinates
         float x1 = vertex1.xcoord;
         float y1 = vertex1.ycoord;
         float x2 = vertex2.xcoord;
@@ -108,7 +108,7 @@ public class Graph {
             fileReader = new Scanner(new File("Data/" + dataset));
         }
         catch(FileNotFoundException ex) {
-            System.out.print("***Could not connect to external data file***\n");
+            System.out.print("***Could not connect destination external data file***\n");
         }
     }
 
