@@ -8,7 +8,7 @@ public class Main {
         System.out.print("Dataset: " + dataset + "\n");
 
         //create route using Nearest Neighbor
-        Route r1 = tsp1.runNearestNeighbor();
+        Route r1 = tsp1.runNearestNbrAlgthm();
         System.out.print("\nRoute using Nearest Neighbor:");
         r1.printRoute();
         System.out.print("\nTotal Weight: " + r1.calcRouteWeight() + "\n");
