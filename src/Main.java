@@ -2,13 +2,13 @@ public class Main {
     public static void main(String[] args) {
         String dataset = args[0];
         Graph graph = new Graph(dataset);
-        NearNbr tsp1 = new NearNbr();
+        NearNbr tsp1 = new NearNbr(graph.getVertices());
         TwoOptSwap tsp2 = new TwoOptSwap();
 
         System.out.print("Dataset: " + dataset + "\n");
 
         //create route using Nearest Neighbor
-        Route r1 = tsp1.nrstNbrDriver(graph.getVertices());
+        Route r1 = tsp1.nrstNbrDriver();
         System.out.print("\nRoute using Nearest Neighbor:");
         r1.printRoute();
         System.out.print("\nTotal Weight: " + r1.calcRouteWeight() + "\n");
