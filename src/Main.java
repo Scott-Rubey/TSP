@@ -1,3 +1,5 @@
+import java.util.function.Function;
+
 public class Main {
     public static void main(String[] args) {
         String dataset = args[0];
@@ -11,13 +13,17 @@ public class Main {
         Route initialRoute = nearNbr.runNearestNbrAlgthm();
         System.out.print("\nRoute using Nearest Neighbor:");
         initialRoute.printRoute();
-        System.out.print("\nTotal Weight: " + initialRoute.calcRouteWeight() + "\n");
+        printWeight(initialRoute);
 
         //optimize using 2-Opt-Swaps
         Route optimizedRoute = twoOptSwap.runTwoOptSwapAlgthm(initialRoute);
         System.out.print("\nRoute using Two Opt Swap:");
         optimizedRoute.printRoute();
-        System.out.print("\nTotal Weight: " + optimizedRoute.calcRouteWeight() + "\n");
+        printWeight(optimizedRoute);
+    }
+
+    public static void printWeight(Route route){
+        System.out.print("\nTotal Weight: " + route.calcRouteWeight() + "\n");
     }
 
     //TODO: add error handling for bad filename
