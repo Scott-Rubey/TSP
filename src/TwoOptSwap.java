@@ -5,7 +5,6 @@ public class TwoOptSwap {
     //TODO: make this a CL option
     boolean randomSwapsOn = true;
 
-    //TODO: refactor
     //Set 'iterations' to the number of times you want 2-Opt Swap to run
     //This is beneficial only when Random Swaps are enabled,
     //as each iteration attempts to find a better route
@@ -71,7 +70,6 @@ public class TwoOptSwap {
         return newRoute;
     }
 
-    //performs the actual swap operation
     protected Route doSwap(Route oldRoute, int i, int j){
         Route newRoute = new Route();
         int temp = j;
@@ -84,9 +82,8 @@ public class TwoOptSwap {
             --temp;
         }
 
-        for (int m = j + 1; m < oldRoute.vertices.size(); ++m) {
+        for (int m = j + 1; m < oldRoute.vertices.size(); ++m)
             newRoute.vertices.add(oldRoute.vertices.get(m));
-        }
 
         createNewEdgelist(newRoute);
 
@@ -94,13 +91,17 @@ public class TwoOptSwap {
     }
 
     private void createNewEdgelist(Route newRoute) {
-        int numberOfVertices = newRoute.vertices.size();
-        for (int i = 0; i < numberOfVertices; ++i) {
-            List<Edge> vertexEdges = newRoute.vertices.get(i).edges;
-            for (Edge e : vertexEdges) {
-                if (i != numberOfVertices - 1 && e.destinationVertex == newRoute.vertices.get(i + 1))
-                    newRoute.edges.add(e);
-            }
+        for (int i = 0; i < newRoute.vertices.size(); ++i)
+            addCorrectEdge(newRoute, i);
+    }
+
+    private void addCorrectEdge(Route newRoute, int i) {
+        List<Edge> vertexEdges = newRoute.vertices.get(i).edges;
+        boolean nextToLastVertex = i == newRoute.vertices.size() - 1;
+
+        for (Edge edge : vertexEdges) {
+            if (!nextToLastVertex && edge.destinationVertex == newRoute.vertices.get(i + 1))
+                newRoute.edges.add(edge);
         }
     }
 
