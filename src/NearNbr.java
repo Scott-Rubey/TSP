@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class NearNbr {
-    //TODO: refactor
     final List<Vertex> vertices;
 
     protected NearNbr(List<Vertex> vertices){

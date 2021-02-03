@@ -8,18 +8,16 @@ public class Main {
         System.out.print("Dataset: " + dataset + "\n");
 
         //create route using Nearest Neighbor
-        Route r1 = tsp1.runNearestNbrAlgthm();
+        Route nearestNeighbor = tsp1.runNearestNbrAlgthm();
         System.out.print("\nRoute using Nearest Neighbor:");
-        r1.printRoute();
-        System.out.print("\nTotal Weight: " + r1.calcRouteWeight() + "\n");
+        nearestNeighbor.printRoute();
+        System.out.print("\nTotal Weight: " + nearestNeighbor.calcRouteWeight() + "\n");
 
         //optimize using 2-Opt-Swaps
-        Route r2 = tsp2.twoOptSwapDriver(r1);
+        Route twoOptSwap = tsp2.twoOptSwapDriver(nearestNeighbor);
         System.out.print("\nRoute using Two Opt Swap:");
-        r2.printRoute();
-        System.out.print("\nTotal Weight: " + r2.calcRouteWeight() + "\n");
-
-        //Random Swap can be enabled in TwoOptSwap.java
+        twoOptSwap.printRoute();
+        System.out.print("\nTotal Weight: " + twoOptSwap.calcRouteWeight() + "\n");
     }
 
     //TODO: add error handling for bad filename
