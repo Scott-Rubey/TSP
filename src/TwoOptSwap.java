@@ -4,34 +4,34 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TwoOptSwap {
     //TODO: refactor
 
-    //Set 'iterations' destinationVertex the number of times you want 2-Opt Swap destinationVertex run
-    //This is beneficial only when Random Swaps are enabled
-    //Each iteration attempts destinationVertex find a better route
-    protected Route twoOptSwapDriver(Route oldRoute){
+    //Set 'iterations' to the number of times you want 2-Opt Swap to run
+    //This is beneficial only when Random Swaps are enabled,
+    //as each iteration attempts to find a better route
+    protected Route runTwoOptSwapAlgthm(Route nearestNbr){
         int iterations = 10;
-        Route bestRoute = oldRoute;
-        long bestDist = oldRoute.calcRouteWeight();
+        Route bestRoute = nearestNbr;
+        long bestWeight = nearestNbr.calcRouteWeight();
 
         for(int i = 0; i < iterations; ++i){
-            Route curRoute = randomSwap(bestRoute);
-            long curDist = curRoute.calcRouteWeight();
-            if(curDist < bestDist){
-                bestDist = curDist;
-                bestRoute = curRoute;
+            Route newRoute = doTwoOptSwaps(bestRoute);
+            long newWeight = newRoute.calcRouteWeight();
+            if(newWeight < bestWeight){
+                bestWeight = newWeight;
+                bestRoute = newRoute;
             }
         }
         return bestRoute;
     }
 
-    protected Route randomSwap(Route priorBestRoute){
+    protected Route doTwoOptSwaps(Route priorBestRoute){
         long priorBestWeight = priorBestRoute.calcRouteWeight();
         long newRouteWeight;
         Route newRoute;
         Route currentRoute = priorBestRoute;
-        boolean doRandomSwap = true;  //set this destinationVertex 1 in order destinationVertex run w/ random swap
+        boolean doRandomSwap = true;  //set this to true in order to run w/ random swap
         //TODO: make this a CL option
 
-        //perform 2-opt swap heuristic according destinationVertex en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
+        //perform 2-opt swap heuristic according to en.wikipedia.org/wiki/2-opt (which has been verified for accuracy)
         for(int i = 1; i < priorBestRoute.vertices.size()-2; ++i){
             for(int j = i+1; j < priorBestRoute.vertices.size()-1; ++j){
                 //small possibility of triggering a random swap
@@ -40,16 +40,17 @@ public class TwoOptSwap {
 
                 boolean swapTriggered = possibility % tune == 0;
                 if(doRandomSwap && swapTriggered) {
+                    //perform swap using random values for i and j, rather than their value w/in the for-loops
                     int tempi = ThreadLocalRandom.current().nextInt(1, priorBestRoute.vertices.size()-2);
                     int tempj = ThreadLocalRandom.current().nextInt(i+1, priorBestRoute.vertices.size()-1);
                     newRoute = doSwap(currentRoute, tempi, tempj);
-                    newRouteWeight = calcTotal(newRoute);
+                    newRouteWeight = calcWeight(newRoute);
                 }
 
                 //otherwise, continue as normal
                 else {
                     newRoute = doSwap(currentRoute, i, j);
-                    newRouteWeight = calcTotal(newRoute);
+                    newRouteWeight = calcWeight(newRoute);
                 }
 
                 //if a new best has been found, keep it
@@ -96,7 +97,7 @@ public class TwoOptSwap {
         }
     }
 
-    protected long calcTotal(Route route){
+    protected long calcWeight(Route route){
         return route.calcRouteWeight();
     }
 }
