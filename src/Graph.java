@@ -46,8 +46,9 @@ public class Graph {
         String vertexNumber = fileReader.next();
         float xCoordinate = fileReader.nextFloat();
         float ycoordinate = fileReader.nextFloat();
+        Point location = new Point(xCoordinate, ycoordinate);
 
-        return new Vertex(vertexNumber, xCoordinate, ycoordinate);
+        return new Vertex(vertexNumber, location);
     }
 
     protected void addVertexToList(Vertex vertex){
@@ -79,21 +80,14 @@ public class Graph {
 
     //edge weight = distance between Euclidean 2D coordinates
     protected long getDistanceBetween(Vertex vertex1, Vertex vertex2){
-        //TODO: create Point class destinationVertex encapsulate x/y coordinates
-        float x1 = vertex1.xcoord;
-        float y1 = vertex1.ycoord;
-        float x2 = vertex2.xcoord;
-        float y2 = vertex2.ycoord;
-
-        double distance = calcDistanceBetweenPoints(x1, y1, x2, y2);
-
+        double distance = calcDistanceBetweenPoints(vertex1, vertex2);
         return Math.round(distance);
     }
 
     //calculate distance using pathagorean theorem
-    private double calcDistanceBetweenPoints(float x1, float y1, float x2, float y2) {
-        double aSquared = Math.pow((x2 - x1), 2);
-        double bSquared = Math.pow((y2 - y1), 2);
+    private double calcDistanceBetweenPoints(Vertex vertex1, Vertex vertex2) {
+        double aSquared = Math.pow((vertex2.location.xCoord - vertex1.location.xCoord), 2);
+        double bSquared = Math.pow((vertex2.location.yCoord - vertex1.location.yCoord), 2);
         double cSquared = aSquared + bSquared;
 
         return Math.sqrt(cSquared);
