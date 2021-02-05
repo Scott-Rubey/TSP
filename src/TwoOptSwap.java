@@ -2,7 +2,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoOptSwap {
-    //TODO: make this a CL option
     boolean randomSwapFlag;
 
     protected TwoOptSwap(boolean flag){
