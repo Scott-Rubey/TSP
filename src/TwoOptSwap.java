@@ -3,7 +3,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TwoOptSwap {
     //TODO: make this a CL option
-    boolean randomSwapsOn = true;
+    boolean randomSwapFlag;
+
+    protected TwoOptSwap(boolean flag){
+        this.randomSwapFlag = flag;
+    }
 
     //Set 'iterations' to the number of times you want 2-Opt Swap to run
     //This is beneficial only when Random Swaps are enabled,
@@ -36,7 +40,7 @@ public class TwoOptSwap {
                 //small possibility of triggering a random swap
                 boolean randomSwapTriggered = isRandomSwapTriggered();
 
-                if(randomSwapsOn && randomSwapTriggered)
+                if(this.randomSwapFlag && randomSwapTriggered)
                     newRoute = doRandomSwap(priorBestRoute, currentRoute, i);
                 else
                     newRoute = doSwap(currentRoute, i, j);
