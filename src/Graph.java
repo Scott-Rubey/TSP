@@ -89,8 +89,9 @@ public class Graph {
         double aSquared = Math.pow((vertex2.location.xCoord - vertex1.location.xCoord), 2);
         double bSquared = Math.pow((vertex2.location.yCoord - vertex1.location.yCoord), 2);
         double cSquared = aSquared + bSquared;
+        double distance = Math.sqrt(cSquared);
 
-        return Math.sqrt(cSquared);
+        return distance;
     }
 
     private void addEdgeToList(Vertex vertex1, Edge edge) {
