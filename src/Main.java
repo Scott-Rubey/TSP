@@ -86,6 +86,4 @@ public class Main {
 
         return flagPresent;
     }
-
-    //TODO: add error handling for bad filename
 }
