@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.Scanner;
 
 public class TwoOptSwap {
     boolean randomSwapFlag;
@@ -15,9 +16,13 @@ public class TwoOptSwap {
         int iterations = 10;
         Route bestRoute = nearestNbr;
         long bestWeight = nearestNbr.calcRouteWeight();
+        int tune = 0;
+
+        if(randomSwapFlag)
+            tune = getTuneValue();
 
         for(int i = 0; i < iterations; ++i){
-            Route newRoute = doTwoOptSwaps(bestRoute);
+            Route newRoute = doTwoOptSwaps(bestRoute, tune);
             long newWeight = newRoute.calcRouteWeight();
             if(newWeight < bestWeight){
                 bestWeight = newWeight;
@@ -27,7 +32,7 @@ public class TwoOptSwap {
         return bestRoute;
     }
 
-    protected Route doTwoOptSwaps(Route priorBestRoute){
+    protected Route doTwoOptSwaps(Route priorBestRoute, int tune){
         Route currentRoute = priorBestRoute;
         long priorBestWeight = priorBestRoute.calcRouteWeight();
         Route newRoute;
@@ -37,7 +42,7 @@ public class TwoOptSwap {
         for(int i = 1; i < priorBestRoute.vertices.size()-2; ++i){
             for(int j = i+1; j < priorBestRoute.vertices.size()-1; ++j){
                 //small possibility of triggering a random swap
-                boolean randomSwapTriggered = isRandomSwapTriggered();
+                boolean randomSwapTriggered = isRandomSwapTriggered(tune);
 
                 if(this.randomSwapFlag && randomSwapTriggered)
                     newRoute = doRandomSwap(priorBestRoute, currentRoute, i);
@@ -56,10 +61,35 @@ public class TwoOptSwap {
         return currentRoute;
     }
 
-    private boolean isRandomSwapTriggered() {
-        int tune = 10;  //TODO: make this a CL option
-        int possibility = ThreadLocalRandom.current().nextInt(1,  tune+1);
+    private int getTuneValue(){
+        Scanner input = new Scanner(System.in);
+        boolean inputError = true;
+        int tune = 0;
 
+        System.out.print("\nEnter the tune value for random swaps (10 is considered roughly optimal): ");
+
+        if(input.hasNextInt()) {
+            tune = input.nextInt();
+            inputError = checkForInputErrors(tune);
+        }
+
+        if(inputError)
+            handleInputErrors();
+
+        return tune;
+    }
+
+    private void handleInputErrors() {
+        printInputError();
+        System.exit(1);
+    }
+
+    private void printInputError(){
+        System.out.print("\nInput error.  Please enter an integer between 1 and 100.\n");
+    }
+
+    private boolean isRandomSwapTriggered(int tune) {
+        int possibility = ThreadLocalRandom.current().nextInt(1,  tune+1);
         return possibility % tune == 0;
     }
 
@@ -106,6 +136,15 @@ public class TwoOptSwap {
             if (!nextToLastVertex && edge.destinationVertex == newRoute.vertices.get(i + 1))
                 newRoute.edges.add(edge);
         }
+    }
+
+    private boolean checkForInputErrors(int tune){
+        boolean error = false;
+
+        if(tune < 1 || tune > 100)
+           error = true;
+
+        return error;
     }
 
     protected long calcWeight(Route route){
