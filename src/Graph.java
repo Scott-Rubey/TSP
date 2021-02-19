@@ -20,8 +20,13 @@ public class Graph {
 
     protected void loadVertices(){
         connectToFile();
-        loadFirstVertex();
-        loadRemainingVertices();
+
+        //load vertices
+        while(fileReader.hasNext()) {
+            Vertex vertex = getVertexFromFile();
+            addVertexToList(vertex);
+            fileReader.nextLine();
+        }
 
         fileReader.close();
     }
@@ -33,22 +38,6 @@ public class Graph {
         catch(FileNotFoundException ex) {
             System.out.print("\n***Could not connect to external data file***\n");
             System.exit(1);
-        }
-    }
-
-    protected void loadFirstVertex() {
-        if(fileReader.hasNext()) {
-            Vertex vertex = getVertexFromFile();
-            addVertexToList(vertex);
-            fileReader.nextLine();
-        }
-    }
-
-    private void loadRemainingVertices() {
-        while(fileReader.hasNext()) {
-            Vertex vertex = getVertexFromFile();
-            addVertexToList(vertex);
-            fileReader.nextLine();
         }
     }
 
